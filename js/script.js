@@ -5,8 +5,11 @@ var animFrame = window.requestAnimationFrame ||
 	window.msRequestAnimationFrame     ||
 	null ;
 
-var realContextElement = document.getElementById("screen");
+var realCanvas = document.getElementById("screen");
 var realContext = realContextElement.getContext("2d");
+var virtualContext = document.createElement("canvas");
+virtualCanvas.width = realCanvas.width;
+virtualCanvas.height = realCanvas.height;
 
 var angle = 0.0;
 
@@ -24,21 +27,21 @@ var tick = function()
 
 var draw = function()
 {
-	var ctx = document.createElement('canvas');
-	ctx.width = realCanvasElement.width;
-	ctx.height = realCanvasElement.height;
-	ctx.clearRect(0, 0, c.width, c.height);
+	var ctx = virtualCanvas.getContext("2d");
+	ctx.clearRect(0, 0, ctx.width, ctx.height);
 
 	ctx.fillStyle = "red";
 	ctx.font = "bold 32px";
 
 	ctx.save();
 
-	ctx.translate(c.width/2, c.height/2);
+	ctx.translate(ctx.width/2, ctx.height/2);
 	ctx.rotate(Math.PI * angle);
 	ctx.fillText("我爱小宝！", 0, 0);
 
 	ctx.restore();
+
+	realContext.drawImage(virtualCanvas, 0, 0);
 }
 
 
