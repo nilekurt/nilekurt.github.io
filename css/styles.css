@@ -1,6 +1,22 @@
-canvas#screen
-{
-	width: 640px;
-	height: 480px;
+div#outer {
+	width: 100%;
+	text-align: center;
+}
+
+div#inner {
+	display: inline-grid;
+	grid-template-columns: auto auto;
+	grid-template-rows: auto auto;
+	grid-row-gap: 0;
+}
+
+div#inner div {
+	margin: 0;
+	padding: 0;
+}
+
+canvas.quad {
+	margin: 0 2px 0 2px;
+	padding: 0;
 	border: 1px solid black;
 }
