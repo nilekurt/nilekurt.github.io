@@ -17,7 +17,7 @@ var tick = function()
 	var delta = newTime - currentTime;
 	currentTime = newTime;
 	
-	angle += 0.01 * delta;
+	angle += 0.0001 * delta;
 	angle %= 2.0;
 }
 
