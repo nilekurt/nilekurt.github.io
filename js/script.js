@@ -1,3 +1,10 @@
+var animFrame = window.requestAnimationFrame ||
+	window.webkitRequestAnimationFrame ||
+	window.mozRequestAnimationFrame    ||
+	window.oRequestAnimationFrame      ||
+	window.msRequestAnimationFrame     ||
+	null ;
+
 var c = document.getElementById("screen");
 var ctx = c.getContext("2d");
 
