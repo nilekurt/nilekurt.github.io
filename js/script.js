@@ -48,7 +48,7 @@ JSTest.GameEngine.prototype.draw = function ()
 	ctx.save();
 
 	ctx.translate(this._canvas.width/2, this._canvas.height/2);
-	ctx.rotate(Math.PI * angle);
+	ctx.rotate(Math.PI * this._angle);
 	ctx.fillText("我爱小宝！", 0, 0);
 
 	ctx.restore();
