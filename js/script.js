@@ -1,98 +1,165 @@
+/***************************************************
+An online solver for Lambert's problem
+Copyright (C) 2019 Kim Nilsson
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+***************************************************/
+
 var JSTest = JSTest || {};
 
-
-JSTest.GameEngine = function (canvas, frameCallback)
-{
-	this._shouldRun = false;
-	this._canvas = canvas;
-	this._ctx = canvas.getContext("2d");
-	this._frameCallback = frameCallback;
-
-	// Game
-	this._angle = 0.0;
-
-	// Timing
-	this._framePeriod = 1000.0/60.0;
-	this._delta = 0;
-	this._newTime = 0;
-	this._currentTime = Date.now();
-	this._frameAccumulator = 0;
+const orientations = {
+    XYZ : 'xyz',
+    XZY : 'xzy',
+    YZX : 'yzx'
 };
 
-JSTest.GameEngine.prototype.stop = function ()
-{
-	this._shouldRun = false;
-	this._canvas.removeEventListener("mousedown", this.stop.bind(this));
-	this._canvas.addEventListener("mousedown", this.start.bind(this));
-}
+JSTest.WorldView = function(name, orientation, canvas, coordinate_callback) {
+    this.name = name;
+    this.canvas = canvas;
 
-JSTest.GameEngine.prototype.start = function ()
-{
-	this._shouldRun = true;
-	this._canvas.removeEventListener("mousedown", this.start.bind(this));
-	this._canvas.addEventListener("mousedown", this.stop.bind(this));
-	this.mainLoop();
-}
+    this.ctx = canvas.getContext("2d");
+    this.ctx.font = "14pt Sans Serif";
+    this.ctx.lineWidth = 1;
 
-JSTest.GameEngine.prototype.tick = function()
-{
-	this._angle += 0.0001 * this._delta;
-	this._angle %= 2.0;
+    this.grid_constant = 10;
+
+    this.coordinate_callback = coordinate_callback;
+
+    switch (orientation)
+    {
+    case orientations.XYZ:
+        this.transform = math.matrix([ [ 1, 0 ], [ 0, 1 ], [ 0, 0 ] ]);
+        this.inverse = math.matrix([ [ 1, 0, 0 ], [ 0, 1, 0 ] ]);
+        break;
+    case orientations.XZY:
+        this.transform = math.matrix([ [ 1, 0 ], [ 0, 0 ], [ 0, 1 ] ]);
+        this.inverse = math.matrix([ [ 1, 0, 0 ], [ 0, 0, 1 ] ]);
+        break;
+    case orientations.YZX:
+        this.transform = math.matrix([ [ 0, 0 ], [ 1, 0 ], [ 0, 1 ] ]);
+        this.inverse = math.matrix([ [ 0, 1, 0 ], [ 0, 0, 1 ] ]);
+        break;
+    }
+
+    canvas.addEventListener("pointerdown", this.onPointerDown.bind(this));
 };
 
-JSTest.GameEngine.prototype.draw = function ()
-{
-	var ctx = this._ctx;
+JSTest.WorldView.prototype.onPointerDown = function(event) {
+    const coords = math.matrix([ [ event.offsetX ], [ event.offsetY ] ]);
+    const transformed_coords = math.multiply(this.transform, coords);
 
-	ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
-
-	ctx.fillStyle = "red";
-	ctx.font = "bold 32px";
-
-	ctx.save();
-
-	ctx.translate(this._canvas.width/2, this._canvas.height/2);
-	ctx.rotate(Math.PI * this._angle);
-	ctx.fillText("关谷个傻逼！", 0, 0);
-
-	ctx.restore();
+    this.coordinate_callback(this, event, transformed_coords);
 };
 
-JSTest.GameEngine.prototype.mainLoop = function()
-{
-	this._newTime = Date.now();
-	this._delta = this._newTime - this._currentTime;
-	this._currentTime = this._newTime;
-	this._frameAccumulator += this._delta;
-
-	this.tick();
-	
-	if (this._frameAccumulator >= this._framePeriod)
-	{
-		this._frameAccumulator = 0;
-		this.draw();
-	}
-
-	if (this._shouldRun)
-	{
-		this._frameCallback( this.mainLoop.bind(this), this._canvas );
-	}
+JSTest.World = function() {
+    this.has_cursor = false;
+    this.views = {};
+    this.cursor_pos = math.matrix([ [ 0 ], [ 0 ], [ 0 ] ]);
 };
 
-document.addEventListener("DOMContentLoaded",
-function()
-{
-	var animFrame = window.requestAnimationFrame ||
-		window.webkitRequestAnimationFrame ||
-		window.mozRequestAnimationFrame    ||
-		window.oRequestAnimationFrame      ||
-		window.msRequestAnimationFrame     ||
-		null ;
+JSTest.World.prototype.drawGrid = function(v) {
+    v.ctx.strokeStyle = '#B0B0B0';
+    for (var i = 0; i < v.canvas.width; i += v.grid_constant)
+    {
+        v.ctx.beginPath();
+        v.ctx.moveTo(i, 0);
+        v.ctx.lineTo(i, v.canvas.height);
+        v.ctx.stroke();
+    }
 
-	var canvasElement = document.getElementById("screen");
-	
-	var Engine = new JSTest.GameEngine(canvasElement, animFrame);
-	
-	canvasElement.addEventListener("mousedown", Engine.start.bind(Engine));
-}
-);
+    for (var i = 0; i < v.canvas.height; i += v.grid_constant)
+    {
+        v.ctx.beginPath();
+        v.ctx.moveTo(0, i);
+        v.ctx.lineTo(v.canvas.width, i);
+        v.ctx.stroke();
+    }
+};
+
+JSTest.World.prototype.redraw = function() {
+    for (var [key, v] of Object.entries(this.views))
+    {
+        v.ctx.clearRect(0, 0, v.canvas.width, v.canvas.height);
+        this.drawGrid(v);
+
+        if (this.has_cursor)
+        {
+            const projected_point = math.multiply(v.inverse, this.cursor_pos);
+
+            const x = projected_point.get([ 0, 0 ]);
+            const y = projected_point.get([ 1, 0 ]);
+
+            v.ctx.beginPath();
+            v.ctx.arc(x, y, 3, 0, math.tau);
+            v.ctx.fill();
+
+            v.ctx.strokeStyle = '#505050';
+            v.ctx.beginPath();
+            v.ctx.moveTo(0, y);
+            v.ctx.lineTo(v.canvas.width, y);
+            v.ctx.stroke();
+            v.ctx.beginPath();
+            v.ctx.moveTo(x, 0);
+            v.ctx.lineTo(x, v.canvas.height);
+            v.ctx.stroke();
+
+            v.ctx.moveTo(x + 20, y - 20);
+            v.ctx.fillText('(' + x.toString() + ',' + y.toString() + ')',
+                           x + 20, y - 20);
+        }
+    }
+};
+
+JSTest.World.prototype.onPointerDown = function(view, event, coords) {
+    math.forEach(coords, (val, i) => {
+        if (val > 0)
+        {
+            this.cursor_pos.set(i, val);
+        }
+    });
+
+    this.has_cursor = true;
+
+    this.redraw();
+};
+
+JSTest.World.prototype.createView = function(name, orientation, canvas) {
+    this.views[name] = new JSTest.WorldView(name, orientation, canvas,
+                                            this.onPointerDown.bind(this));
+    this.redraw();
+};
+
+document.addEventListener("DOMContentLoaded", function() {
+    var world = new JSTest.World();
+
+    for (const [name, orientation] of [[ 'tl', orientations.XYZ ],
+                                       [ 'bl', orientations.XZY ],
+                                       [ 'br', orientations.YZX ]])
+    {
+
+        const canvas2d = document.getElementById(name);
+        canvas2d.height = 400;
+        canvas2d.width = 400;
+        world.createView(name, orientation, canvas2d);
+    }
+
+    const canvas3d = document.getElementById('tr');
+    canvas3d.height = 400;
+    canvas3d.width = 400;
+    const ctx2d = canvas3d.getContext("2d");
+    ctx2d.font = "30px Serif";
+    ctx2d.textAlign = "center";
+    ctx2d.fillText("TODO: 3D", canvas3d.width / 2, canvas3d.height / 2);
+});
