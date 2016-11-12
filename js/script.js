@@ -73,6 +73,6 @@ JSTest.GameEngine.prototype.mainLoop = function()
 	}
 };
 
-var Engine = new GameEngine(canvasElement);
+var Engine = new JSTest.GameEngine(canvasElement);
 
 Engine.start();
