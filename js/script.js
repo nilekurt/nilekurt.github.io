@@ -34,13 +34,12 @@ var draw = function()
 	ctx.font = "bold 32px";
 
 	ctx.save();
-
 	ctx.translate(ctx.width/2, ctx.height/2);
 	ctx.rotate(Math.PI * angle);
 	ctx.fillText("我爱小宝！", 0, 0);
-
 	ctx.restore();
 
+	realContext.clearRect(0, 0, realContext.width, realContext.height);
 	realContext.drawImage(virtualCanvas, 0, 0);
 }
 
