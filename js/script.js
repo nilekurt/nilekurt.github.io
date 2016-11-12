@@ -13,7 +13,7 @@ JSTest.GameEngine = function (canvas)
 {
 	this.shouldRun = false;
 	this.canvas = canvas;
-	this.ctx = this.getContext("2d");
+	this.ctx = canvas.getContext("2d");
 
 	// Game
 	this.angle = 0.0;
