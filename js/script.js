@@ -24,7 +24,7 @@ var draw = function()
 	ctx.clearRect(0, 0, c.width, c.height);
 
 	ctx.fillStyle = "red";
-	ctx.font = "bold 16px";
+	ctx.font = "bold 32px";
 
 	ctx.fillText("我爱小宝！", c.width/2, c.height/2);
 	
