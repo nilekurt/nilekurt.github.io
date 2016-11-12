@@ -8,25 +8,28 @@ var animFrame = window.requestAnimationFrame ||
 var c = document.getElementById("screen");
 var ctx = c.getContext("2d");
 
-var posX = 0;
+var posX = 0.0;
 
 var tick = function()
 {
-	posX += 1;
-	if ( posX > c.width )
+	posX += 0.01;
+	if ( posX > 2.0 )
 	{
-		posX = 0;
+		posX = 0.0;
 	}
 }
 
 var draw = function()
 {
 	ctx.clearRect(0, 0, c.width, c.height);
-	ctx.beginPath();
-	ctx.moveTo(0,0);
-	ctx.lineTo(posX, c.height);
-	ctx.stroke();
-	ctx.closePath();
+
+	ctx.fillStyle = "red";
+	ctx.font = "bold 16px";
+
+	ctx.save();
+	ctx.rotate(Math.PI * posX);
+	context.fillText("我爱小宝！", c.width/2, c.height/2);
+	ctx.restore();
 }
 
 
