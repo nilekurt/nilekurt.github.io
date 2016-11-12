@@ -28,7 +28,7 @@ var draw = function()
 
 	ctx.save();
 	ctx.rotate(Math.PI * posX);
-	context.fillText("我爱小宝！", c.width/2, c.height/2);
+	ctx.fillText("我爱小宝！", c.width/2, c.height/2);
 	ctx.restore();
 }
 
