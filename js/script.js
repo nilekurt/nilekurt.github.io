@@ -5,24 +5,28 @@ var animFrame = window.requestAnimationFrame ||
 	window.msRequestAnimationFrame     ||
 	null ;
 
-var c = document.getElementById("screen");
-var ctx = c.getContext("2d");
+var realContextElement = document.getElementById("screen");
+var realContext = realContextElement.getContext("2d");
 
 var angle = 0.0;
+
+// Timing
+var framePeriod = 1000.0/60.0;
+var newTime = 0.0;
 var currentTime = Date.now();
+var delta = 0.0;
 
 var tick = function()
 {
-	var newTime = Date.now();
-	var delta = newTime - currentTime;
-	currentTime = newTime;
-	
 	angle += 0.0001 * delta;
 	angle %= 2.0;
 }
 
 var draw = function()
 {
+	var ctx = document.createElement('canvas');
+	ctx.width = realCanvasElement.width;
+	ctx.height = realCanvasElement.height;
 	ctx.clearRect(0, 0, c.width, c.height);
 
 	ctx.fillStyle = "red";
@@ -40,8 +44,15 @@ var draw = function()
 
 var mainLoop = function()
 {
+	newTime = Date.now();
+	delta = newTime - currentTime;
+	currentTime = newTime;
+	
 	tick();
-	draw();
+	if (delta >= framePeriod)
+	{
+		draw();
+	}
 
 	animFrame( mainLoop, c );
 };
