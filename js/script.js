@@ -10,18 +10,30 @@ var ctx = c.getContext("2d");
 
 var posX = 0;
 
-var mainLoop = function()
+var tick = function()
 {
 	posX += 1;
 	if ( posX > c.width )
 	{
 		posX = 0;
 	}
+}
 
-	ctx.moveTo(0,0);
+var draw = function()
+{
 	ctx.clearRect(0, 0, c.width, c.height);
+	ctx.beginPath();
+	ctx.moveTo(0,0);
 	ctx.lineTo(posX, c.height);
 	ctx.stroke();
+	ctx.closePath();
+}
+
+
+var mainLoop = function()
+{
+	tick();
+	draw();
 
 	animFrame( mainLoop, c );
 };
