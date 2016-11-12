@@ -6,8 +6,8 @@ var animFrame = window.requestAnimationFrame ||
 	null ;
 
 var realCanvas = document.getElementById("screen");
-var realContext = realContextElement.getContext("2d");
-var virtualContext = document.createElement("canvas");
+var realContext = realContext.getContext("2d");
+var virtualCanvas = document.createElement("canvas");
 virtualCanvas.width = realCanvas.width;
 virtualCanvas.height = realCanvas.height;
 
