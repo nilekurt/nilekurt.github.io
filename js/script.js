@@ -29,15 +29,15 @@ JSTest.GameEngine = function (canvas)
 JSTest.GameEngine.prototype.stop = function ()
 {
 	this._shouldRun = false;
-	this._canvas.removeEventListener("click", this.stop);
-	this._canvas.addEventListener("click", this.start);
+	this._canvas.removeEventListener("mousedown", this.stop);
+	this._canvas.addEventListener("mousedown", this.start);
 }
 
 JSTest.GameEngine.prototype.start = function ()
 {
 	this._shouldRun = true;
-	this._canvas.removeEventListener("click", this.start);
-	this._canvas.addEventListener("click", this.stop);
+	this._canvas.removeEventListener("mousedown", this.start);
+	this._canvas.addEventListener("mousedown", this.stop);
 	this.mainLoop();
 }
 
@@ -87,4 +87,4 @@ JSTest.GameEngine.prototype.mainLoop = function()
 };
 
 var Engine = new JSTest.GameEngine(canvasElement);
-canvasElement.addEventListener("click", Engine.start);
+canvasElement.addEventListener("mousedown", Engine.start);
