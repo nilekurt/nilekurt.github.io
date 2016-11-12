@@ -5,12 +5,8 @@ var animFrame = window.requestAnimationFrame ||
 	window.msRequestAnimationFrame     ||
 	null ;
 
-var realCanvas = document.getElementById("screen");
-var realContext = realCanvas.getContext("2d");
-var virtualCanvas = document.createElement("canvas");
-virtualCanvas.width = 120;
-virtualCanvas.height = 120;
-var ctx = virtualCanvas.getContext("2d");
+var canvas = document.getElementById("screen");
+var ctx = canvas.getContext("2d");
 
 var angle = 0.0;
 
@@ -34,12 +30,12 @@ var draw = function()
 	ctx.font = "bold 32px";
 
 	ctx.save();
+
 	ctx.translate(ctx.width/2, ctx.height/2);
 	ctx.rotate(Math.PI * angle);
 	ctx.fillText("我爱小宝！", 0, 0);
-	ctx.restore();
 
-	realContext.drawImage(virtualCanvas, 0, 0);
+	ctx.restore();
 }
 
 
@@ -55,7 +51,7 @@ var mainLoop = function()
 		draw();
 	}
 
-	animFrame( mainLoop, realCanvas );
+	animFrame( mainLoop, canvas );
 };
 
 mainLoop();
