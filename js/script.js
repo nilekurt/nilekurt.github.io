@@ -1,11 +1,12 @@
 var JSTest = JSTest || {};
 
 
-JSTest.GameEngine = function (canvas)
+JSTest.GameEngine = function (canvas, frameCallback)
 {
 	this._shouldRun = false;
 	this._canvas = canvas;
 	this._ctx = canvas.getContext("2d");
+	this._frameCallback = frameCallback;
 
 	// Game
 	this._angle = 0.0;
@@ -74,7 +75,7 @@ JSTest.GameEngine.prototype.mainLoop = function()
 
 	if (this._shouldRun)
 	{
-		animFrame( this.mainLoop.bind(this), this._canvas );
+		this._frameCallback( this.mainLoop.bind(this), this._canvas );
 	}
 };
 
@@ -90,7 +91,7 @@ function()
 
 	var canvasElement = document.getElementById("screen");
 	
-	var Engine = new JSTest.GameEngine(canvasElement);
+	var Engine = new JSTest.GameEngine(canvasElement, animFrame);
 	
 	canvasElement.addEventListener("mousedown", Engine.start.bind(Engine));
 }
