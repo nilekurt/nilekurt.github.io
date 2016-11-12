@@ -26,9 +26,15 @@ JSTest.GameEngine = function (canvas)
 	this._frameAccumulator = 0;
 };
 
+JSTest.GameEngine.prototype.stop = function ()
+{
+	this._shouldRun = false;
+	this._canvas.onClick = this.start;
+
 JSTest.GameEngine.prototype.start = function ()
 {
 	this._shouldRun = true;
+	this._canvas.onClick = this.stop;
 	this.mainLoop();
 }
 
@@ -79,4 +85,4 @@ JSTest.GameEngine.prototype.mainLoop = function()
 
 var Engine = new JSTest.GameEngine(canvasElement);
 
-Engine.start();
+canvasElement.onClick = Engine.start;
