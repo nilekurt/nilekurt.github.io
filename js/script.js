@@ -49,7 +49,7 @@ JSTest.GameEngine.prototype.draw = function ()
 
 	ctx.translate(this._canvas.width/2, this._canvas.height/2);
 	ctx.rotate(Math.PI * this._angle);
-	ctx.fillText("我爱小宝！", 0, 0);
+	ctx.fillText("关谷个傻逼！", 0, 0);
 
 	ctx.restore();
 };
