@@ -1,3 +1,5 @@
+var JSTest = JSTest || {};
+
 var animFrame = window.requestAnimationFrame ||
 	window.webkitRequestAnimationFrame ||
 	window.mozRequestAnimationFrame    ||
@@ -5,25 +7,39 @@ var animFrame = window.requestAnimationFrame ||
 	window.msRequestAnimationFrame     ||
 	null ;
 
-var canvas = document.getElementById("screen");
-var ctx = canvas.getContext("2d");
+var canvasElement = document.getElementById("screen");
 
-var angle = 0.0;
-
-// Timing
-var framePeriod = 1000.0/60.0;
-var newTime = 0.0;
-var currentTime = Date.now();
-var delta = 0.0;
-
-var tick = function()
+JSTest.GameEngine(canvas) = function
 {
-	angle += 0.0001 * delta;
-	angle %= 2.0;
+	this.shouldRun = false;
+	this.canvas = canvas;
+	this.ctx = this.getContext("2d");
+
+	// Game
+	this.angle = 0.0;
+
+	// Timing
+	this.framePeriod = 1000.0/60.0;
+	this.delta = 0.0;
+	this.currentTime = Date.now();
+};
+
+JSTest.GameEngine.prototype.start = function ()
+{
+	this.shouldRun = true;
+	this.mainLoop();
 }
 
-var draw = function()
+JSTest.GameEngine.prototype.tick = function()
 {
+	this.angle += 0.0001 * this.delta;
+	this.angle %= 2.0;
+};
+
+JSTest.GameEngine.prototype.draw = function ()
+{
+	var ctx = this.ctx;
+
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	ctx.fillStyle = "red";
@@ -36,22 +52,27 @@ var draw = function()
 	ctx.fillText("我爱小宝！", 0, 0);
 
 	ctx.restore();
-}
-
-
-var mainLoop = function()
-{
-	newTime = Date.now();
-	delta = newTime - currentTime;
-	currentTime = newTime;
-	
-	tick();
-	if (delta >= framePeriod)
-	{
-		draw();
-	}
-
-	animFrame( mainLoop, canvas );
 };
 
-mainLoop();
+JSTest.GameEngine.prototype.mainLoop = function()
+{
+	this.newTime = Date.now();
+	this.delta = this.newTime - this.currentTime;
+	this.currentTime = this.newTime;
+	
+	this.tick();
+	
+	if (this.delta >= this.framePeriod)
+	{
+		this.draw();
+	}
+
+	if (this.shouldRun)
+	{
+		animFrame( this.mainLoop, this.canvas );
+	}
+};
+
+var Engine = new GameEngine(canvasElement);
+
+Engine.start();
