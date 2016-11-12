@@ -9,7 +9,7 @@ var animFrame = window.requestAnimationFrame ||
 
 var canvasElement = document.getElementById("screen");
 
-JSTest.GameEngine(canvas) = function ()
+JSTest.GameEngine = function (canvas)
 {
 	this.shouldRun = false;
 	this.canvas = canvas;
