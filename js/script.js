@@ -29,14 +29,14 @@ JSTest.GameEngine = function (canvas)
 JSTest.GameEngine.prototype.stop = function ()
 {
 	this._shouldRun = false;
-	this._canvas.removeEventListner("click", this.stop);
+	this._canvas.removeEventListener("click", this.stop);
 	this._canvas.addEventListener("click", this.start);
 }
 
 JSTest.GameEngine.prototype.start = function ()
 {
 	this._shouldRun = true;
-	this._canvas.removeEventListner("click", this.start);
+	this._canvas.removeEventListener("click", this.start);
 	this._canvas.addEventListener("click", this.stop);
 	this.mainLoop();
 }
