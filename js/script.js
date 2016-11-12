@@ -69,7 +69,7 @@ JSTest.GameEngine.prototype.mainLoop = function()
 
 	if (this._shouldRun)
 	{
-		animFrame( this.mainLoop, this._canvas );
+		animFrame( this.mainLoop.bind(this), this._canvas );
 	}
 };
 
