@@ -57,7 +57,7 @@ var mainLoop = function()
 		draw();
 	}
 
-	animFrame( mainLoop, c );
+	animFrame( mainLoop, realCanvas );
 };
 
-animFrame( mainLoop, c);
+mainLoop();
