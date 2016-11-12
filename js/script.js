@@ -26,9 +26,10 @@ var draw = function()
 	ctx.fillStyle = "red";
 	ctx.font = "bold 16px";
 
+	ctx.fillText("我爱小宝！", c.width/2, c.height/2);
+	
 	ctx.save();
 	ctx.rotate(Math.PI * posX);
-	ctx.fillText("我爱小宝！", c.width/2, c.height/2);
 	ctx.restore();
 }
 
