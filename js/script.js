@@ -40,14 +40,14 @@ JSTest.GameEngine.prototype.draw = function ()
 {
 	var ctx = this._ctx;
 
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
 	ctx.fillStyle = "red";
 	ctx.font = "bold 32px";
 
 	ctx.save();
 
-	ctx.translate(canvas.width/2, canvas.height/2);
+	ctx.translate(this._canvas.width/2, this._canvas.height/2);
 	ctx.rotate(Math.PI * angle);
 	ctx.fillText("我爱小宝！", 0, 0);
 
