@@ -11,34 +11,34 @@ var canvasElement = document.getElementById("screen");
 
 JSTest.GameEngine = function (canvas)
 {
-	this.shouldRun = false;
-	this.canvas = canvas;
-	this.ctx = canvas.getContext("2d");
+	this._shouldRun = false;
+	this._canvas = canvas;
+	this._ctx = canvas.getContext("2d");
 
 	// Game
-	this.angle = 0.0;
+	this._angle = 0.0;
 
 	// Timing
-	this.framePeriod = 1000.0/60.0;
-	this.delta = 0.0;
-	this.currentTime = Date.now();
+	this._framePeriod = 1000.0/60.0;
+	this._delta = 0.0;
+	this._currentTime = Date.now();
 };
 
 JSTest.GameEngine.prototype.start = function ()
 {
-	this.shouldRun = true;
+	this._shouldRun = true;
 	this.mainLoop();
 }
 
 JSTest.GameEngine.prototype.tick = function()
 {
-	this.angle += 0.0001 * this.delta;
-	this.angle %= 2.0;
+	this._angle += 0.0001 * this._delta;
+	this._angle %= 2.0;
 };
 
 JSTest.GameEngine.prototype.draw = function ()
 {
-	var ctx = this.ctx;
+	var ctx = this._ctx;
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -56,20 +56,20 @@ JSTest.GameEngine.prototype.draw = function ()
 
 JSTest.GameEngine.prototype.mainLoop = function()
 {
-	this.newTime = Date.now();
-	this.delta = this.newTime - this.currentTime;
-	this.currentTime = this.newTime;
+	this._newTime = Date.now();
+	this._delta = this._newTime - this._currentTime;
+	this._currentTime = this._newTime;
 	
 	this.tick();
 	
-	if (this.delta >= this.framePeriod)
+	if (this._delta >= this._framePeriod)
 	{
 		this.draw();
 	}
 
-	if (this.shouldRun)
+	if (this._shouldRun)
 	{
-		animFrame( this.mainLoop, this.canvas );
+		animFrame( this.mainLoop, this._canvas );
 	}
 };
 
