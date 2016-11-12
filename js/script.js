@@ -31,7 +31,7 @@ var draw = function()
 
 	ctx.save();
 
-	ctx.translate(ctx.width/2, ctx.height/2);
+	ctx.translate(canvas.width/2, canvas.height/2);
 	ctx.rotate(Math.PI * angle);
 	ctx.fillText("我爱小宝！", 0, 0);
 
