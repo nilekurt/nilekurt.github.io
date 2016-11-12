@@ -26,4 +26,4 @@ var mainLoop = function()
 	animFrame( mainLoop, c );
 };
 
-animFrame( mainloop, c);
+animFrame( mainLoop, c);
