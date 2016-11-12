@@ -91,7 +91,7 @@ function()
 
 	var canvasElement = document.getElementById("screen");
 	
-	var Engine = new JSTest.GameEngine(canvasElement, animFrame);
+	var Engine = new JSTest.GameEngine(canvasElement, animFrame.bind(window));
 	
 	canvasElement.addEventListener("mousedown", Engine.start.bind(Engine));
 }
