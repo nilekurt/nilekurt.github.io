@@ -24,7 +24,7 @@ var tick = function()
 
 var draw = function()
 {
-	ctx.clearRect(0, 0, ctx.width, ctx.height);
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	ctx.fillStyle = "red";
 	ctx.font = "bold 32px";
