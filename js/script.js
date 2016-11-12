@@ -20,8 +20,10 @@ JSTest.GameEngine = function (canvas)
 
 	// Timing
 	this._framePeriod = 1000.0/60.0;
-	this._delta = 0.0;
+	this._delta = 0;
+	this._newTime = 0;
 	this._currentTime = Date.now();
+	this._frameAccumulator = 0;
 };
 
 JSTest.GameEngine.prototype.start = function ()
@@ -59,11 +61,13 @@ JSTest.GameEngine.prototype.mainLoop = function()
 	this._newTime = Date.now();
 	this._delta = this._newTime - this._currentTime;
 	this._currentTime = this._newTime;
-	
+	this._frameAccumulator += this._delta;
+
 	this.tick();
 	
-	if (this._delta >= this._framePeriod)
+	if (this._frameAccumulator >= this._framePeriod)
 	{
+		this._frameAccumulator = 0;
 		this.draw();
 	}
 
