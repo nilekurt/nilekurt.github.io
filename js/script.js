@@ -1,13 +1,5 @@
 var JSTest = JSTest || {};
 
-var animFrame = window.requestAnimationFrame ||
-	window.webkitRequestAnimationFrame ||
-	window.mozRequestAnimationFrame    ||
-	window.oRequestAnimationFrame      ||
-	window.msRequestAnimationFrame     ||
-	null ;
-
-var canvasElement = document.getElementById("screen");
 
 JSTest.GameEngine = function (canvas)
 {
@@ -86,5 +78,20 @@ JSTest.GameEngine.prototype.mainLoop = function()
 	}
 };
 
-var Engine = new JSTest.GameEngine(canvasElement);
-canvasElement.addEventListener("mousedown", Engine.start);
+document.addEventListener("DOMContentLoaded",
+function()
+{
+	var animFrame = window.requestAnimationFrame ||
+		window.webkitRequestAnimationFrame ||
+		window.mozRequestAnimationFrame    ||
+		window.oRequestAnimationFrame      ||
+		window.msRequestAnimationFrame     ||
+		null ;
+
+	var canvasElement = document.getElementById("screen");
+	
+	var Engine = new JSTest.GameEngine(canvasElement);
+	
+	canvasElement.addEventListener("mousedown", Engine.start);
+}
+);
