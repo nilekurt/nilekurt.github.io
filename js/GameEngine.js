@@ -2,9 +2,7 @@
 
 var JSTest = JSTest || {};
 
-JSTest.GameEngine = JSTest.GameEngine || {};
-JSTest.GameState = JSTest.GameState || {};
-
+var GameEngine = (function () (GameState) {
 JSTest.GameEngine.loadResources = function(onLoad)
 {
     $.getScript('js/GameState.js')
