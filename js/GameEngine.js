@@ -5,14 +5,14 @@ var JSTest = JSTest || {};
 JSTest.GameEngine = JSTest.GameEngine || {};
 JSTest.GameState = JSTest.GameState || {};
 
-JSTest.GameEngine.loadResources = function()
+JSTest.GameEngine.loadResources = function(onLoad)
 {
     $.getScript('js/GameState.js')
     .done(
         function()
         {
-            JSTest.GameState.onLoad = JSTest.GameEngine.onLoad;
-            JSTest.GameState.loadResources();
+            var JSTest.GameState.loadResources = JSTest.GameState.loadResources || function (onLoad) {};
+            JSTest.GameState.loadResources(onLoad);
         }
     )
     .fail(

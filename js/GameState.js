@@ -2,7 +2,7 @@ var JSTest = JSTest || {};
 
 JSTest.GameState = JSTest.GameState || {};
 
-JSTest.GameState.loadResources = function()
+JSTest.GameState.loadResources = function(onLoad)
 {
-    GameState.onLoad();
+    onLoad();
 }
