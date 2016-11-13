@@ -10,7 +10,7 @@ var importsLoaded = function()
         window.msRequestAnimationFrame     ||
         null ;
 
-    var canvasElement = $('#screen');
+    var canvasElement = $('#screen')[0];
 
     var Engine = new JSTest.GameEngine(canvasElement, animFrame.bind(window));
 
