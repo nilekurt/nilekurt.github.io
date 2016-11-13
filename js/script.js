@@ -1,5 +1,6 @@
 
 var JSTest = JSTest || {};
+JSTest.GameEngine = JSTest.GameEngine || {};
 
 // DO ACTUAL STUFF
 var importsLoaded = function()
