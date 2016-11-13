@@ -5,7 +5,7 @@ var JSTest = JSTest || {};
 JSTest.GameEngine.LoadResources = function(onLoaded)
 {
     $.getScript('js/GameState.js')
-    .done(GameState.LoadResources.apply(onLoaded))
+    .done(GameState.LoadResources.bind(null, onLoaded))
     .fail(
         function()
         {

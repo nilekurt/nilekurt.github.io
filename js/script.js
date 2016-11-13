@@ -22,7 +22,7 @@ var importsLoaded = function()
 $(function()
 {
     $.getScript("js/GameEngine.js")
-    .done(JSTest.GameEngine.LoadResources.apply(importsLoaded))
+    .done(JSTest.GameEngine.LoadResources.bind(null, importsLoaded))
     .fail(
         function() {
             alert('Failed to load import!');
