@@ -1,4 +1,18 @@
+
+
 var JSTest = JSTest || {};
+
+JSTest.GameEngine.LoadResources = function(onLoaded)
+{
+    $.getScript('js/GameState.js')
+    .done(GameState.LoadResources.apply(onLoaded))
+    .fail(
+        function()
+        {
+            alert('Failed to load GameEngine resources!');
+        }
+    );
+}
 
 JSTest.GameEngine = function (canvas, frameCallback)
 {
@@ -33,6 +47,10 @@ JSTest.GameEngine.prototype.start = function ()
 	this.mainLoop();
 }
 
+JSTest.GameEngine.prototype.input = function ()
+{
+}
+
 JSTest.GameEngine.prototype.tick = function()
 {
 	this._angle += 0.0001 * this._delta;
@@ -57,6 +75,7 @@ JSTest.GameEngine.prototype.draw = function ()
 	ctx.restore();
 };
 
+
 JSTest.GameEngine.prototype.mainLoop = function()
 {
 	this._newTime = Date.now();
@@ -64,12 +83,12 @@ JSTest.GameEngine.prototype.mainLoop = function()
 	this._currentTime = this._newTime;
 	this._frameAccumulator += this._delta;
 
-	this.tick();
+	this._currentState.tick(this._delta);
 	
 	if (this._frameAccumulator >= this._framePeriod)
 	{
 		this._frameAccumulator = 0;
-		this.draw();
+		this._currentState.draw();
 	}
 
 	if (this._shouldRun)
