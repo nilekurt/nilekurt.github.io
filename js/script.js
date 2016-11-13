@@ -24,7 +24,8 @@ $(function()
 	$.getScript("js/GameEngine.js")
 	.done(importsLoaded)
 	.fail(
-		function() {
+		function()
+		{
 			alert('Failed to load import!');
 		}
 	);
