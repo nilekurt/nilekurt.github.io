@@ -2,12 +2,19 @@
 
 var JSTest = JSTest || {};
 
-JSTest.GameEngine = {};
+JSTest.GameEngine = JSTest.GameEngine || {};
+JSTest.GameState = JSTest.GameState || {};
 
-JSTest.GameEngine.LoadResources = function(onLoaded)
+JSTest.GameEngine.loadResources = function()
 {
     $.getScript('js/GameState.js')
-    .done(GameState.LoadResources.bind(null, onLoaded))
+    .done(
+        function()
+        {
+            JSTest.GameState.onLoad = JSTest.GameEngine.onLoad;
+            JSTest.GameState.loadResources();
+        }
+    )
     .fail(
         function()
         {
