@@ -11,7 +11,7 @@ JSTest.GameEngine.loadResources = function(onLoad)
     .done(
         function()
         {
-            var JSTest.GameState.loadResources = JSTest.GameState.loadResources || function (onLoad) {};
+            var JSTest.GameState.loadResources = JSTest.GameState.loadResources || function () {};
             JSTest.GameState.loadResources(onLoad);
         }
     )
