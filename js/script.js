@@ -1,10 +1,14 @@
-$.getScript("/js/GameEngine.js",
+$.getScript("js/GameEngine.js")
+.done(
 function( data, textStatus, jqxhr ) {
   console.log( data ); // Data returned
   console.log( textStatus ); // Success
   console.log( jqxhr.status ); // 200
-  console.log( "Load was performed."); 
-}
+  console.log( "Load was performed."); }
+)
+.fail(
+function() {
+alert('Failed to load import!'); }
 );
 
 var JSTest = JSTest || {};
