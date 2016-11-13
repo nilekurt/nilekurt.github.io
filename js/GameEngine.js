@@ -2,6 +2,8 @@
 
 var JSTest = JSTest || {};
 
+JSTest.GameEngine = {};
+
 JSTest.GameEngine.LoadResources = function(onLoaded)
 {
     $.getScript('js/GameState.js')
