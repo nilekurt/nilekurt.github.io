@@ -26,5 +26,5 @@ $(function()
             alert('Failed to load import!');
             }
     );
-};
+}
 );
