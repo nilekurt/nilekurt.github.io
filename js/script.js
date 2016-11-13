@@ -1,4 +1,4 @@
-$.getScript("GameEngine.js")
+$.getScript("/js/GameEngine.js")
 
 var JSTest = JSTest || {};
 
