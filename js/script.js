@@ -1,6 +1,5 @@
 
 var JSTest = JSTest || {};
-JSTest.GameEngine = JSTest.GameEngine || {};
 
 // DO ACTUAL STUFF
 var importsLoaded = function()
@@ -22,17 +21,12 @@ var importsLoaded = function()
 // MAIN
 $(function()
 {
-    $.getScript("js/GameEngine.js")
-    .done(
-        function() {
-            var JSTest.GameEngine.loadResources = JSTest.GameEngine.loadResources || (function() {});
-            JSTest.GameEngine.loadResources(importsLoaded);
-        }
-    )
-    .fail(
-        function() {
-            alert('Failed to load import!');
-            }
-    );
+	$.getScript("js/GameEngine.js")
+	.done(importsLoaded)
+	.fail(
+		function() {
+			alert('Failed to load import!');
+		}
+	);
 }
 );

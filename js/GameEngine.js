@@ -1,25 +1,5 @@
-
-
 var JSTest = JSTest || {};
-
-var GameEngine = (function () (GameState) {
-JSTest.GameEngine.loadResources = function(onLoad)
-{
-    $.getScript('js/GameState.js')
-    .done(
-        function()
-        {
-            var JSTest.GameState.loadResources = JSTest.GameState.loadResources || (function () {});
-            JSTest.GameState.loadResources(onLoad);
-        }
-    )
-    .fail(
-        function()
-        {
-            alert('Failed to load GameEngine resources!');
-        }
-    );
-}
+q
 
 JSTest.GameEngine = function (canvas, frameCallback)
 {
@@ -27,6 +7,10 @@ JSTest.GameEngine = function (canvas, frameCallback)
 	this._canvas = canvas;
 	this._ctx = canvas.getContext('2d');
 	this._frameCallback = frameCallback;
+
+	// State machine
+	this._nextState;
+	this._currentState;
 
 	// Game
 	this._angle = 0.0;
@@ -44,7 +28,7 @@ JSTest.GameEngine.prototype.stop = function ()
 	this._shouldRun = false;
 	this._canvas.removeEventListener('mousedown', this.stop.bind(this));
 	this._canvas.addEventListener('mousedown', this.start.bind(this));
-}
+};
 
 JSTest.GameEngine.prototype.start = function ()
 {
@@ -52,11 +36,11 @@ JSTest.GameEngine.prototype.start = function ()
 	this._canvas.removeEventListener('mousedown', this.start.bind(this));
 	this._canvas.addEventListener('mousedown', this.stop.bind(this));
 	this.mainLoop();
-}
+};
 
 JSTest.GameEngine.prototype.input = function ()
 {
-}
+};
 
 JSTest.GameEngine.prototype.tick = function()
 {
