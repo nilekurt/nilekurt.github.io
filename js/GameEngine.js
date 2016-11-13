@@ -55,20 +55,23 @@ JSTest.GameEngine = function (canvas, frameCallback)
 	
 	// Init state
 	this._currentState = new JSTest.GameStates.Init(this._canvas);
+	this._stopListener = this.stop.bind(this);
+	this._startListener = this.start.bind(this);
+	this._loopCallback = this.mainLoop.bind(this);
 };
 
 JSTest.GameEngine.prototype.stop = function ()
 {
 	this._shouldRun = false;
-	this._canvas.removeEventListener('mousedown', this.stop.bind(this));
-	this._canvas.addEventListener('mousedown', this.start.bind(this));
+	this._canvas.removeEventListener('mousedown', this._stopListener);
+	this._canvas.addEventListener('mousedown', this._startListener);
 };
 
 JSTest.GameEngine.prototype.start = function ()
 {
 	this._shouldRun = true;
-	this._canvas.removeEventListener('mousedown', this.start.bind(this));
-	this._canvas.addEventListener('mousedown', this.stop.bind(this));
+	this._canvas.removeEventListener('mousedown', this._startListener);
+	this._canvas.addEventListener('mousedown', this._stopListener);
 
 	this._currentTime = performance.now();
 	this.mainLoop(this._currentTime);
@@ -91,6 +94,6 @@ JSTest.GameEngine.prototype.mainLoop = function(timestamp)
 
 	if (this._shouldRun)
 	{
-		this._frameCallback( this.mainLoop.bind(this), this._canvas );
+		this._frameCallback( this._loopCallback, this._canvas );
 	}
 };
