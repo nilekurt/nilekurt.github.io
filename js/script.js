@@ -25,7 +25,7 @@ $(function()
     $.getScript("js/GameEngine.js")
     .done(
         function() {
-            var JSTest.GameEngine.loadResources = JSTest.GameEngine.loadResources || function() {};
+            var JSTest.GameEngine.loadResources = JSTest.GameEngine.loadResources || (function() {});
             JSTest.GameEngine.loadResources(importsLoaded);
         }
     )
