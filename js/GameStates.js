@@ -30,17 +30,15 @@ JSTest.World.prototype.interpolate = function(prevWorld, alpha)
     else if (a > b)
     {
         var delta = 2*Math.PI - a;
-        a = 0.0;
         b += delta;
-        interpWorld._angle = a*alpha + b*(1 - alpha) - delta;
+        interpWorld._angle = b*(1 - alpha) - delta;
         interpWorld._angle %= 2 * Math.PI;
     }
     else
     {
         var delta = 2*Math.PI - b;
-        b = 0.0;
         a += delta;
-        interpWorld._angle = a*alpha + b*(1 - alpha) - delta;
+        interpWorld._angle = a*alpha - delta;
         interpWorld._angle %= 2 * Math.PI;
     }
 
