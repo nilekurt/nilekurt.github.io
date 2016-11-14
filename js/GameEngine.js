@@ -1,41 +1,6 @@
 var JSTest = JSTest || {};
 JSTest.GameStates = JSTest.GameStates || {};
 
-JSTest.GameStates.Init = function(canvas)
-{
-	this._canvas = canvas;
-	this._ctx = canvas.getContext('2d');
-	// Game
-	this._angle = 0.0;
-};
-
-JSTest.GameStates.Init.prototype.draw = function()
-{
-	var ctx = this._ctx;
-
-	ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
-
-	ctx.fillStyle = 'red';
-	ctx.font = 'bold 32px';
-
-	ctx.save();
-
-	ctx.translate(this._canvas.width/2, this._canvas.height/2);
-	ctx.rotate(Math.PI * this._angle);
-	ctx.fillText('关谷个傻逼！', 0, 0);
-
-	ctx.restore();
-};
-
-JSTest.GameStates.Init.prototype.tick = function(delta)
-{
-	this._angle += 0.0001 * delta;
-	this._angle %= 2.0;
-};
-
-JSTest.GameStates.Init.prototype.input = function()
-{
-};
 
 JSTest.GameEngine = function (canvas, frameCallback)
 {

@@ -21,7 +21,7 @@ var importsLoaded = function()
 // MAIN
 $(function()
 {
-	$.getScript("js/GameEngine.js")
+	$.getScript({'js/GameStates.js', 'js/GameEngine.js'})
 	.done(importsLoaded)
 	.fail(
 		function()
