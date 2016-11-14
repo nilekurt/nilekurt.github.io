@@ -23,7 +23,7 @@ JStest.World.prototype.interpolate = function(prevWorld, alpha)
         var delta = 2*Math.PI - a;
         a = 0.0;
         b += delta;
-        interpWorld._angle = a*alpha + b*(1 -- alpha) - delta;
+        interpWorld._angle = a*alpha + b*(1 - alpha) - delta;
         interpWorld._angle %= 2 * Math.PI;
     }
     else
