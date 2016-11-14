@@ -15,6 +15,7 @@ JSTest.GameStates.Init = function(canvas)
         this._currentState.angle = 0.0;
 
         this._prevState = {};
+        this._interpState = {};
 };
 
 JSTest.GameStates.Init.prototype.draw = function()
@@ -29,7 +30,7 @@ JSTest.GameStates.Init.prototype.draw = function()
 	ctx.save();
 
 	ctx.translate(this._canvas.width/2, this._canvas.height/2);
-	ctx.rotate(Math.PI * this._angle);
+	ctx.rotate(Math.PI * this._interpState.angle);
 	ctx.fillText('关谷个傻逼！', 0, 0);
 
 	ctx.restore();
@@ -47,6 +48,9 @@ JSTest.GameStates.Init.prototype.tick = function(delta)
         this._currentState.angle += 0.0001 * this._timeStep;
         this._currentState.angle %= 2.0;
     }
+
+    var alpha = this._timeAccumulator / this._timeStep;
+    this._interpState.angle = alpha * _currentState.angle + (1 - alpha) * _prevState.angle;
 };
 
 JSTest.GameStates.Init.prototype.input = function()
