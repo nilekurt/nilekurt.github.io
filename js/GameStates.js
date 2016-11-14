@@ -96,12 +96,13 @@ JSTest.GameStates.Init.prototype.tick = function(delta)
     {
         this._timeAccumulator -= this._timeStep;
 
-        debugger;
         this._prevWorld = this._currentWorld.copy();
 
         this._currentWorld.setAngle( this._currentWorld.getAngle() + 0.0001 * this._timeStep);
         this._currentWorld.setAngle( this._currentWorld.getAngle() % (2 * Math.PI));
     }
+    
+    debugger;
 
     var alpha = this._timeAccumulator / this._timeStep;
 
