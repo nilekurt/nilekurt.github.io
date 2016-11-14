@@ -68,7 +68,7 @@ JSTest.GameStates.Init = function(canvas)
         this._timeStep = 60.0;
 
         this._currentWorld = new JSTest.World();
-        this._currentWorld.setAngle(0.0);
+        this._prevWorld = new JSTest.World();
 };
 
 JSTest.GameStates.Init.prototype.draw = function()
