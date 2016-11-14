@@ -23,7 +23,7 @@ JSTest.World.prototype.interpolate = function(prevWorld, alpha)
     var a = this._angle;
     var b = tWorld._angle;
 
-    if (abs(b - a) <= Math.PI)
+    if (Math.abs(b - a) <= Math.PI)
     {
         interpWorld._angle = a*alpha + b*(1 - alpha);
     }
