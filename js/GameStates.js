@@ -49,7 +49,7 @@ JSTest.GameStates.Init = function(canvas)
         this._timeAccumulator = 0.0;
         this._timeStep = 60.0;
 
-        this._currentWorld = new JStest.World();
+        this._currentWorld = new JSTest.World();
         this._currentWorld.angle = 0.0;
 };
 
