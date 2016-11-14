@@ -46,16 +46,10 @@ JSTest.GameEngine.prototype.mainLoop = function(timestamp)
 {
 	this._delta = timestamp - this._currentTime;
 	this._currentTime = timestamp;
-	this._frameAccumulator += this._delta;
 
 	this._currentState.input();
 	this._currentState.tick(this._delta);
-	
-	if (this._frameAccumulator >= this._framePeriod)
-	{
-		this._frameAccumulator -= this._framePeriod;
-		this._currentState.draw();
-	}
+	this._currentState.draw();
 
 	if (this._shouldRun)
 	{
