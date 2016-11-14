@@ -1,6 +1,8 @@
 
 var JSTest = JSTest || {};
 
+var Engine;
+
 // DO ACTUAL STUFF
 var importsLoaded = function()
 {
@@ -13,7 +15,7 @@ var importsLoaded = function()
 
     var canvasElement = $('#screen')[0];
 
-    var Engine = new JSTest.GameEngine(canvasElement, animFrame.bind(window));
+    Engine = new JSTest.GameEngine(canvasElement, animFrame.bind(window));
 
     Engine.start();
 }
