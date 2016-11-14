@@ -7,7 +7,7 @@ JSTest.World = function()
     this._angle = 0.0;
 };
 
-JStest.World.prototype.interpolate = function(prevWorld, alpha)
+JSTest.World.prototype.interpolate = function(prevWorld, alpha)
 {
     var interpWorld = new World();
 
