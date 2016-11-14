@@ -19,9 +19,8 @@ JSTest.World.prototype.interpolate = function(prevWorld, alpha)
 {
     var interpWorld = new JSTest.World();
 
-    var tWorld = prevWorld instanceof JSTest.World;
     var a = this._angle;
-    var b = tWorld._angle;
+    var b = prevWorld._angle;
 
     if (Math.abs(b - a) <= Math.PI)
     {
@@ -81,7 +80,6 @@ JSTest.GameStates.Init.prototype.draw = function()
 	ctx.save();
 
 	ctx.translate(this._canvas.width/2, this._canvas.height/2);
-        debugger;
 	ctx.rotate(this._interpWorld.getAngle());
 	ctx.fillText('关谷个傻逼！', 0, 0);
 
@@ -101,8 +99,6 @@ JSTest.GameStates.Init.prototype.tick = function(delta)
         this._currentWorld.setAngle( this._currentWorld.getAngle() + 0.0001 * this._timeStep);
         this._currentWorld.setAngle( this._currentWorld.getAngle() % (2 * Math.PI));
     }
-    
-    debugger;
 
     var alpha = this._timeAccumulator / this._timeStep;
 
