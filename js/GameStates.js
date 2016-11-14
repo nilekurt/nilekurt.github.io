@@ -9,7 +9,7 @@ JSTest.World = function()
 
 JSTest.World.prototype.interpolate = function(prevWorld, alpha)
 {
-    var interpWorld = new World();
+    var interpWorld = new JSTest.World();
 
     var a = this._angle;
     var b = prevWorld._angle;
@@ -49,7 +49,7 @@ JSTest.GameStates.Init = function(canvas)
         this._timeAccumulator = 0.0;
         this._timeStep = 60.0;
 
-        this._currentWorld = new World();
+        this._currentWorld = new JStest.World();
         this._currentWorld.angle = 0.0;
 };
 
