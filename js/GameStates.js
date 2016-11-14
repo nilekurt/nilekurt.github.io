@@ -47,6 +47,11 @@ JSTest.World.prototype.interpolate = function(prevWorld, alpha)
     return interpWorld;
 };
 
+JSTest.World.prototype.getAngle = function()
+{
+    return this._angle;
+};
+
 
 
 JSTest.GameStates.Init = function(canvas)
@@ -74,7 +79,7 @@ JSTest.GameStates.Init.prototype.draw = function()
 	ctx.save();
 
 	ctx.translate(this._canvas.width/2, this._canvas.height/2);
-	ctx.rotate(Math.PI * this._interpWorld.angle);
+	ctx.rotate(this._interpWorld.getAngle());
 	ctx.fillText('关谷个傻逼！', 0, 0);
 
 	ctx.restore();
