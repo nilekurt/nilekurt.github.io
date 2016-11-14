@@ -52,6 +52,10 @@ JSTest.World.prototype.getAngle = function()
     return this._angle;
 };
 
+JSTest.World.prototype.setAngle = function(angle)
+{
+    this._angle = angle;
+};
 
 
 JSTest.GameStates.Init = function(canvas)
@@ -64,7 +68,7 @@ JSTest.GameStates.Init = function(canvas)
         this._timeStep = 60.0;
 
         this._currentWorld = new JSTest.World();
-        this._currentWorld.angle = 0.0;
+        this._currentWorld.setAngle(0.0);
 };
 
 JSTest.GameStates.Init.prototype.draw = function()
