@@ -50,7 +50,7 @@ JSTest.GameStates.Init.prototype.tick = function(delta)
     }
 
     var alpha = this._timeAccumulator / this._timeStep;
-    this._interpState.angle = alpha * _currentState.angle + (1 - alpha) * _prevState.angle;
+    this._interpState.angle = alpha * this._currentState.angle + (1 - alpha) * this._prevState.angle;
 };
 
 JSTest.GameStates.Init.prototype.input = function()
