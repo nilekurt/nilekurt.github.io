@@ -49,11 +49,8 @@ JSTest.GameStates.Init = function(canvas)
         this._timeAccumulator = 0.0;
         this._timeStep = 60.0;
 
-        this._currentWorld = {};
+        this._currentWorld = new World();
         this._currentWorld.angle = 0.0;
-
-        this._prevWorld = {};
-        this._interpWorld = {};
 };
 
 JSTest.GameStates.Init.prototype.draw = function()
@@ -82,7 +79,7 @@ JSTest.GameStates.Init.prototype.tick = function(delta)
     {
         this._timeAccumulator -= this._timeStep;
 
-        this._prevWorld = this._currentWorld;
+        this._prevWorld = $.extend(true, {}, this._currentWorld);
 
         this._currentWorld.angle += 0.0001 * this._timeStep;
         this._currentWorld.angle %= 2 * Math.PI;
