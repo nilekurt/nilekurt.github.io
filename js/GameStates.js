@@ -7,6 +7,14 @@ JSTest.World = function()
     this._angle = 0.0;
 };
 
+JSTest.World.prototype.copy = function()
+{
+    var worldCopy = new JSTest.World();
+    worldCopy._angle = this._angle;
+
+    return worldCopy;
+}
+
 JSTest.World.prototype.interpolate = function(prevWorld, alpha)
 {
     var interpWorld = new JSTest.World();
@@ -79,7 +87,7 @@ JSTest.GameStates.Init.prototype.tick = function(delta)
     {
         this._timeAccumulator -= this._timeStep;
 
-        this._prevWorld = $.extend(true, {}, this._currentWorld);
+        this._prevWorld = this._currentWorld.copy();
 
         this._currentWorld.angle += 0.0001 * this._timeStep;
         this._currentWorld.angle %= 2 * Math.PI;
