@@ -40,15 +40,15 @@ JSTest.WorldView = function(name, orientation, canvas, coordinate_callback) {
     switch (orientation)
     {
     case orientations.XYZ:
-        this.transform = math.matrix([ [ 1, 0 ], [ 0, 1 ], [ 0, 0 ] ]);
+        this.transform = math.matrix([ [ 1, 0 ], [ 0, 1 ], [ -1, -1 ] ]);
         this.inverse = math.matrix([ [ 1, 0, 0 ], [ 0, 1, 0 ] ]);
         break;
     case orientations.XZY:
-        this.transform = math.matrix([ [ 1, 0 ], [ 0, 0 ], [ 0, 1 ] ]);
+        this.transform = math.matrix([ [ 1, 0 ], [ -1, -1 ], [ 0, 1 ] ]);
         this.inverse = math.matrix([ [ 1, 0, 0 ], [ 0, 0, 1 ] ]);
         break;
     case orientations.YZX:
-        this.transform = math.matrix([ [ 0, 0 ], [ 1, 0 ], [ 0, 1 ] ]);
+        this.transform = math.matrix([ [ -1, -1 ], [ 1, 0 ], [ 0, 1 ] ]);
         this.inverse = math.matrix([ [ 0, 1, 0 ], [ 0, 0, 1 ] ]);
         break;
     }
@@ -60,12 +60,13 @@ JSTest.WorldView.prototype.onPointerDown = function(event) {
     const coords = math.matrix([ [ event.offsetX ], [ event.offsetY ] ]);
     const transformed_coords = math.multiply(this.transform, coords);
 
-    this.coordinate_callback(this, event, transformed_coords);
+    this.coordinate_callback(transformed_coords);
 };
 
 JSTest.World = function() {
     this.has_cursor = false;
     this.views = {};
+    this.cursor_callbacks = {};
     this.cursor_pos = math.matrix([ [ 0 ], [ 0 ], [ 0 ] ]);
 };
 
@@ -89,7 +90,7 @@ JSTest.World.prototype.drawGrid = function(v) {
 };
 
 JSTest.World.prototype.redraw = function() {
-    for (var [key, v] of Object.entries(this.views))
+    for (var [, v] of Object.entries(this.views))
     {
         v.ctx.clearRect(0, 0, v.canvas.width, v.canvas.height);
         this.drawGrid(v);
@@ -122,13 +123,19 @@ JSTest.World.prototype.redraw = function() {
     }
 };
 
-JSTest.World.prototype.onPointerDown = function(view, event, coords) {
+JSTest.World.prototype.updateCursor = function(coords) {
+    // If coordinate is negative, then maintain original value
     math.forEach(coords, (val, i) => {
-        if (val > 0)
+        if (val >= 0)
         {
             this.cursor_pos.set(i, val);
         }
     });
+
+    for (const [, v] of Object.entries(this.cursor_callbacks))
+    {
+        v(this.cursor_pos);
+    }
 
     this.has_cursor = true;
 
@@ -137,18 +144,25 @@ JSTest.World.prototype.onPointerDown = function(view, event, coords) {
 
 JSTest.World.prototype.createView = function(name, orientation, canvas) {
     this.views[name] = new JSTest.WorldView(name, orientation, canvas,
-                                            this.onPointerDown.bind(this));
+                                            this.updateCursor.bind(this));
     this.redraw();
 };
 
-document.addEventListener("DOMContentLoaded", function() {
+JSTest.World.prototype.getCursorPos = function() { return this.cursor_pos; };
+
+JSTest.World.prototype.addCursorCallback = function(
+    name, callback) { this.cursor_callbacks[name] = callback; };
+
+JSTest.World.prototype.removeCursorCallback = function(
+    name) { delete this.cursor_callbacks[name]; };
+
+document.addEventListener("DOMContentLoaded", () => {
     var world = new JSTest.World();
 
     for (const [name, orientation] of [[ 'tl', orientations.XYZ ],
                                        [ 'bl', orientations.XZY ],
                                        [ 'br', orientations.YZX ]])
     {
-
         const canvas2d = document.getElementById(name);
         canvas2d.height = 400;
         canvas2d.width = 400;
@@ -161,5 +175,27 @@ document.addEventListener("DOMContentLoaded", function() {
     const ctx2d = canvas3d.getContext("2d");
     ctx2d.font = "30px Serif";
     ctx2d.textAlign = "center";
-    ctx2d.fillText("TODO: 3D", canvas3d.width / 2, canvas3d.height / 2);
+    ctx2d.fillText("TODO: 3D View", canvas3d.width / 2, canvas3d.height / 2);
+
+    const x_input = document.getElementById("xcoord");
+    const y_input = document.getElementById("ycoord");
+    const z_input = document.getElementById("zcoord");
+
+    const coord_callback = (event) => {
+        const coords = math.matrix(
+            [ [ x_input.value ], [ y_input.value ], [ z_input.value ] ]);
+        world.updateCursor(coords, false);
+    };
+
+    x_input.onkeypress = coord_callback;
+    y_input.onkeypress = coord_callback;
+    z_input.onkeypress = coord_callback;
+
+    world.addCursorCallback("coord_inputs", (cursor) => {
+        x_input.value = cursor.get([ 0, 0 ]);
+        y_input.value = cursor.get([ 1, 0 ]);
+        z_input.value = cursor.get([ 2, 0 ]);
+    });
+
+    world.updateCursor(math.matrix([ [ 0 ], [ 0 ], [ 0 ] ]));
 });

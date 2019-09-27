@@ -15,16 +15,27 @@
 <body>
 	<div id="outer">
 		<div id="inner">
+			<div id="menubar">
+				<form>
+					X: <input id="xcoord" type="number">
+					Y: <input id="ycoord" type="number">
+					Z: <input id="zcoord" type="number">
+				</form>
+			</div>
 			<div>
+				X-Y <br>
 				<canvas id="tl" class="quad"></canvas>
 			</div>
 			<div>
+				3D <br>
 				<canvas id="tr" class="quad"></canvas>
 			</div>
 			<div>
+				X-Z <br>
 				<canvas id="bl" class="quad"></canvas>
 			</div>
 			<div>
+				Y-Z <br>
 				<canvas id="br" class="quad"></canvas>
 			</div>
 		</div>
