@@ -1,0 +1,64 @@
+export class SceneNode {
+    constructor(name, parent, user_data) {
+        this.name = name;
+        this.parent = parent;
+        this.transform = math.matrix([[0], [0], [0]]);
+        this.user_data = user_data;
+        this.children = [];
+    }
+
+    setTransform(transform) {
+        this.transform = transform;
+    }
+
+    addChild(node) { this.children.push(node); }
+
+    findChild(name) {
+        if (this.name == name) {
+            return this;
+        }
+
+        for (child of this.children) {
+            const result = child.findChild(name);
+            if (result) {
+                return result;
+            }
+        }
+
+        return null;
+    }
+
+    fmap(f) {
+        f(this);
+
+        for (const child of this.children) {
+            child.fmap(f);
+        }
+    }
+}
+
+export class SceneGraph {
+    constructor() { this.root = null; }
+
+    setRoot(node) {
+        console.info('Setting ' + node.name + ' as root');
+        const old_root = this.root;
+        this.root = node;
+
+        return old_root;
+    }
+
+    findNode(name) {
+        if (this.root) {
+            return this.root.findChild(name);
+        }
+
+        return null;
+    }
+
+    fmap(f) {
+        if (this.root) {
+            this.root.fmap(f);
+        }
+    }
+}
