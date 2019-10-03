@@ -1,6 +1,3 @@
-import { orientations, World } from './world.mjs'
-import * as Astro from './astro.mjs'
-
 /***************************************************
 An online solver for Lambert's problem
 Copyright (C) 2019 Kim Nilsson
@@ -19,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************/
+
+import { orientations, World } from './world.mjs'
+import * as Astro from './astro.mjs'
 
 document.addEventListener("DOMContentLoaded", () => {
     const world = new World();
