@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const param_list = document.getElementById("params");
     param_list.innerHTML += ('<li>DU: ' + DU.toExponential(3) + ' m</li>');
-    param_list.innerHTML += ('<li>TU: ' + TU.toExponential(3) + ' m</li>');
+    param_list.innerHTML += ('<li>TU: ' + TU.toExponential(3) + ' s</li>');
 
     // @TODO: Add view navigation
     // @TODO: Add object rendering
