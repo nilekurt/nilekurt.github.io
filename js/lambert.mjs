@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const coord_callback = (event) => {
         const coords = math.matrix(
-            [[x_input.value], [y_input.value], [z_input.value]]);
+            [[x_input.value], [y_input.value], [z_input.value], [1]]);
         world.updateCursor(coords, false);
     };
 
@@ -59,11 +59,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const y = cursor.get([1, 0]);
         const z = cursor.get([2, 0]);
         x_input.value = parseFloat(x.toFixed(3));
-
         y_input.value = parseFloat(y.toFixed(3));
         z_input.value = parseFloat(z.toFixed(3));
     });
-    world.updateCursor(math.matrix([[0], [0], [0]]));
+
     const earth = new Astro.Earth();
     const moon = new Astro.Moon();
 
@@ -72,6 +71,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.info(earth);
     console.info(moon);
+
+    world.updateCursor(math.matrix([[0], [0], [0], [0]]));
+
+    const DU = world.getDU();
+    const TU = world.getTU();
+
+    const param_list = document.getElementById("params");
+    param_list.innerHTML += ('<li>DU: ' + DU.toExponential(3) + ' m</li>');
+    param_list.innerHTML += ('<li>TU: ' + TU.toExponential(3) + ' m</li>');
 
     // @TODO: Add view navigation
     // @TODO: Add object rendering

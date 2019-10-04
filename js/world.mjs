@@ -17,9 +17,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************/
 
-import { getRV } from './astro.mjs';
+import { getR } from './astro.mjs';
 import { WorldView } from './worldview.mjs';
 import { SceneNode, SceneGraph } from './scenegraph.mjs';
+import { RenderVisitor } from './rendervisitor.mjs';
+import { ChildFinderVisitor } from './childfindervisitor.mjs';
+import * as Matrix from './matrix.mjs';
 
 export { orientations } from './worldview.mjs';
 
@@ -32,7 +35,15 @@ export class World {
         this.cursor_callbacks = {};
         this.object_descriptions = {};
         this.scene_graph = new SceneGraph();
-        this.cursor_pos = math.matrix([[0], [0], [0]]);
+        this.cursor_pos = math.matrix([[0], [0], [0], [1]]);
+    }
+
+    getDU() {
+        return this.DU;
+    }
+
+    getTU() {
+        return this.TU;
     }
 
     setCanonicalFromDescription(object_description) {
@@ -49,24 +60,9 @@ export class World {
         const TU_factor = this.TU / TU_old;
         const VU_factor = this.VU / VU_old;
 
-        this.scene_graph.fmap((node) => { math.multiply(node.transform, DU_factor); });
-    }
+        console.info('DU factor is ' + DU_factor);
 
-    drawGrid(v) {
-        v.ctx.strokeStyle = '#B0B0B0';
-        for (var i = 0; i < v.canvas.width; i += v.grid_constant) {
-            v.ctx.beginPath();
-            v.ctx.moveTo(i, 0);
-            v.ctx.lineTo(i, v.canvas.height);
-            v.ctx.stroke();
-        }
-
-        for (var i = 0; i < v.canvas.height; i += v.grid_constant) {
-            v.ctx.beginPath();
-            v.ctx.moveTo(0, i);
-            v.ctx.lineTo(v.canvas.width, i);
-            v.ctx.stroke();
-        }
+        this.scene_graph.fmap((node) => { node.transform = math.multiply(node.transform, DU_factor); });
     }
 
     updateCursor(coords, should_propagate) {
@@ -78,14 +74,14 @@ export class World {
             }
         }
 
-        this.redraw();
+        this.draw();
     }
 
     createView(name, orientation, canvas) {
         this.views[name] = new WorldView(name, orientation, canvas,
             this.updateCursor.bind(this), () => { return this.cursor_pos; });
 
-        this.redraw();
+        this.draw();
     }
 
     addCursorCallback(
@@ -108,8 +104,9 @@ export class World {
             const parent_node = this.scene_graph.findNode(object.parent);
             const new_node = new SceneNode(object.name, parent_node, object);
 
-            const transform = getRV(object, this.DU, this.AU);
-            new_node.transform = transform;
+            const r = getR(object, this.DU, this.AU);
+            new_node.transform = Matrix.translate(r);
+            console.info(new_node.transform);
 
             console.info('Adding ' + new_node.name + ' as child to ' + parent_node.name);
             parent_node.addChild(new_node);
@@ -119,35 +116,60 @@ export class World {
             this.largest_object = object;
             this.setCanonicalFromDescription(object);
             const new_node = new SceneNode(object.name, null, object);
-            this.scene_graph.fmap((node) => {
-                console.info('Examining node with name ' + node.name);
-                if (node.user_data.parent == object.name) {
-                    console.info('Adding ' + node.name + ' as child to ' + object.name);
-                    new_node.addChild(node);
-                }
-            });
+            const finder = new ChildFinderVisitor(new_node);
+            this.scene_graph.accept(finder);
+
+
             this.scene_graph.setRoot(new_node);
         }
     }
 
-    redraw() {
+    drawGrid(v) {
+        v.ctx.strokeStyle = '#B0B0B0';
+        for (var i = 0; i < v.canvas.width; i += v.grid_constant) {
+            v.ctx.beginPath();
+            v.ctx.moveTo(i, 0);
+            v.ctx.lineTo(i, v.canvas.height);
+            v.ctx.stroke();
+        }
+
+        for (var i = 0; i < v.canvas.height; i += v.grid_constant) {
+            v.ctx.beginPath();
+            v.ctx.moveTo(0, i);
+            v.ctx.lineTo(v.canvas.width, i);
+            v.ctx.stroke();
+        }
+    }
+
+    draw() {
+        // Draw grid
         for (const [, v] of Object.entries(this.views)) {
             v.ctx.clearRect(0, 0, v.canvas.width, v.canvas.height);
             this.drawGrid(v);
+        }
 
-            this.scene_graph.fmap((node) => { });
+        // Draw objects
+        const renderer = new RenderVisitor(this.views, this.DU);
+        this.scene_graph.accept(renderer);
 
+        // Draw cursors
+        for (const [, v] of Object.entries(this.views)) {
+            // Model space coordinates
+            const C = math.multiply(v.collapse, this.cursor_pos);
 
-            const collapsed = math.multiply(v.collapse, this.cursor_pos);
+            // View transformed coordinates
+            const V = math.multiply(v.view, this.cursor_pos);
 
-            const unoffset = math.subtract(this.cursor_pos, v.offset);
-            const projected = math.multiply(v.projection, unoffset);
-            const collapsed_projected = math.multiply(v.collapse, projected);
+            // Window space coordinates
+            const PV = math.multiply(v.projection, V);
 
-            const canvas_x = collapsed_projected.get([0, 0]);
-            const canvas_y = v.canvas.height - collapsed_projected.get([1, 0]);
-            const x = collapsed.get([0, 0]);
-            const y = collapsed.get([1, 0]);
+            // Screen space coordinates
+            const CPV = math.multiply(v.collapse, PV);
+
+            const canvas_x = CPV.get([0, 0]);
+            const canvas_y = v.canvas.height - CPV.get([1, 0]);
+            const x = C.get([0, 0]);
+            const y = C.get([1, 0]);
 
             v.ctx.beginPath();
             v.ctx.arc(canvas_x, canvas_y, 3, 0, math.tau);

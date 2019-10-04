@@ -21,7 +21,7 @@ export class SceneNode {
     constructor(name, parent, user_data) {
         this.name = name;
         this.parent = parent;
-        this.transform = math.matrix([[0], [0], [0]]);
+        this.transform = math.identity(4);
         this.user_data = user_data;
         this.children = [];
     }
@@ -45,6 +45,10 @@ export class SceneNode {
         }
 
         return null;
+    }
+
+    accept(visitor) {
+        visitor.visit(this);
     }
 
     fmap(f) {
@@ -73,6 +77,12 @@ export class SceneGraph {
         }
 
         return null;
+    }
+
+    accept(visitor) {
+        if (this.root) {
+            this.root.accept(visitor);
+        }
     }
 
     fmap(f) {

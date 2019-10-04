@@ -9,10 +9,6 @@
 	<meta name="author" content="nilekurt">
 	<link rel="stylesheet" href="css/styles.css?v=1.0">
 	<script src="js/math.min.js" type="text/javascript"></script>
-	<script src="js/astro.mjs" type="module"></script>
-	<script src="js/scenegraph.mjs" type="module"></script>
-	<script src="js/worldview.mjs" type="module"></script>
-	<script src="js/world.mjs" type="module"></script>
 	<script src="js/lambert.mjs" type="module"></script>
 </head>
 
@@ -20,26 +16,32 @@
 	<div id="outer">
 		<div id="inner">
 			<div id="menubar">
+				<h4>Coordinates</h4>
 				<form>
-					X1: <input id="xcoord" type="number">
-					Y1: <input id="ycoord" type="number">
-					Y1: <input id="zcoord" type="number">
+					<ul>
+						<li><label for="xcoord">X1:</label><input id="xcoord" type="number"></li>
+						<li><label for="ycoord">Y1:</label><input id="ycoord" type="number"></li>
+						<li><label for="zcoord">Z1:</label><input id="zcoord" type="number"></li>
+					</ul>
 				</form>
+				<h4>Parameters</h4>
+				<ul id="params">
+				</ul>
 			</div>
 			<div>
-				X-Y <br>
+				X-Y<br>
 				<canvas id="tl" class="quad"></canvas>
 			</div>
 			<div>
-				3D <br>
+				3D<br>
 				<canvas id="tr" class="quad"></canvas>
 			</div>
 			<div>
-				X-Z <br>
+				X-Z<br>
 				<canvas id="bl" class="quad"></canvas>
 			</div>
 			<div>
-				Y-Z <br>
+				Y-Z<br>
 				<canvas id="br" class="quad"></canvas>
 			</div>
 		</div>

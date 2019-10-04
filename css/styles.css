@@ -16,9 +16,34 @@ div#inner div {
 }
 
 div#menubar {
-	width: 10em;
+	width: 11em;
 	grid-row: 1 / span 2;
 	grid-column: 1 / span 1;
+}
+
+form ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+}
+
+form ul li {
+	font-weight: bold;
+	padding: 10px;
+}
+
+form ul li input {
+	margin-left: 3px;
+	width: 8em;
+}
+
+ul#params {
+	font-family: monospace;
+	list-style-type: none;
+	text-align: left;
+	margin: 0;
+	padding: 10px;
 }
 
 canvas.quad {
